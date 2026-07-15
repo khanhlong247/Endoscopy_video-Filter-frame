@@ -1,0 +1,31 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: endoscopy_redis
+    ports:
+      - "6379:6379"
+    restart: always
+
+  celery_worker:
+    build: 
+      context: .
+      dockerfile: Dockerfile.celery
+    container_name: endoscopy_celery_worker
+    volumes:
+      - ./data:/app/data
+      - ./database/chroma_data:/app/database/chroma_data
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CHROMA_DB_PATH=./database/chroma_data
+    depends_on:
+      - redis
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]

@@ -28,7 +28,7 @@ def extract_frames(video_path: str, target_fps: int):
             
         if count % frame_interval == 0:
             frame_filename = f"frame_{saved_count:05d}.jpg"
-            frame_path = os.path.join(output_dir, frame_filename)
+            frame_path = os.path.join(output_dir, frame_filename).replace("\\", "/")
             cv2.imwrite(frame_path, frame)
             
             timestamp = saved_count / target_fps

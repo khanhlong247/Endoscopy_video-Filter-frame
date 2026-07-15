@@ -1,16 +1,28 @@
+# service/embedding_service.py
 from utils.celery_app import app
 from service.model_service import DINOv2Singleton
 from database.chroma_db import db_manager
 import torch
 import cv2
+import os
 from PIL import Image
 
 @app.task(name="embed_and_store_frame")
 def embed_and_store_frame(frame_meta: dict):
     processor, model, device = DINOv2Singleton.get_model()
     
-    frame_path = frame_meta["frame_path"]
+    frame_path = frame_meta["frame_path"].replace("\\", "/")
+    
+    if not os.path.exists(frame_path):
+        raise FileNotFoundError(
+            f"[ERROR] Celery Worker could not find the file at: {os.path.abspath(frame_path)}. "
+            f"Please check if the 'data' directory is correctly mounted in the Docker container."
+        )
+    
     image = cv2.imread(frame_path)
+    if image is None:
+        raise ValueError(f"[ERROR] Could not read image with OpenCV: {frame_path}")
+        
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     pil_img = Image.fromarray(image)
 
@@ -21,8 +33,8 @@ def embed_and_store_frame(frame_meta: dict):
         embedding = torch.nn.functional.normalize(embedding, p=2, dim=0)
 
     embedding_list = embedding.cpu().numpy().tolist()
-
+    
     frame_id = f"{frame_meta['video_run_id']}_{frame_meta['timestamp']}"
     db_manager.add_frame(frame_id, embedding_list, frame_meta)
     
-    return f"Embedded and stored frame: {frame_meta['frame_name']}"
+    return f"[SUCCESS] Stored embedding for frame: {frame_meta['frame_name']}"

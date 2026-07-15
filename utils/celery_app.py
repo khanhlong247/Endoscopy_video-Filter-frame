@@ -4,6 +4,7 @@ from config import CELERY_BROKER_URL
 app = Celery(
     'endoscopy_tasks',
     broker=CELERY_BROKER_URL,
+    backend=CELERY_BROKER_URL,
     include=['service.embedding_service']
 )
 

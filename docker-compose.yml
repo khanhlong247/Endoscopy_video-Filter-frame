@@ -1,6 +1,3 @@
-# docker-compose.yml
-version: '3.8'
-
 services:
   redis:
     image: redis:7-alpine
@@ -22,10 +19,3 @@ services:
       - CHROMA_DB_PATH=./database/chroma_data
     depends_on:
       - redis
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: all
-              capabilities: [gpu]

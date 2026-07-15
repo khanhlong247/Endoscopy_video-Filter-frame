@@ -31,5 +31,5 @@ def process_video_pipeline(video_path: str):
     print("--- PIPELINE COMPLETED ---")
 
 if __name__ == "__main__":
-    video_input = "data/video/sample.mp4"
+    video_input = "data/video/video2.mp4"
     process_video_pipeline(video_input)

@@ -8,3 +8,6 @@ CHROMA_DB_PATH = os.getenv("CHROMA_DB_PATH", "./database/chroma_data")
 COLLECTION_NAME = os.getenv("COLLECTION_NAME", "endoscopy_frames")
 TARGET_FPS = int(os.getenv("TARGET_FPS", 5))
 COSINE_THRESHOLD = float(os.getenv("COSINE_THRESHOLD", 0.96))
+
+HF_HOME = os.getenv("HF_HOME", "./models")
+os.environ["HF_HOME"] = os.path.abspath(HF_HOME)

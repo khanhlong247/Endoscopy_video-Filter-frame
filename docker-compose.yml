@@ -14,8 +14,10 @@ services:
     volumes:
       - ./data:/app/data
       - ./database/chroma_data:/app/database/chroma_data
+      - ./models:/root/.cache/huggingface
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CHROMA_DB_PATH=./database/chroma_data
+      - HF_HOME=/root/.cache/huggingface
     depends_on:
       - redis

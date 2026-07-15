@@ -184,6 +184,13 @@ python main.py
 
 After running, the duplicate filtering results will be saved at `data/processed_frame/sample_<time_code>_filtered.json`.
 
+### 5. Clear Docker cache
+
+```
+docker builder prune -a -f
+docker image prune -f
+```
+
 ---
 
 ## 🎯 Conclusion

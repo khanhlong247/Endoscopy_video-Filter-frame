@@ -6,6 +6,13 @@ dist/
 wheels/
 *.egg-info
 
+data/
+database/chroma_data/
+models/
+
 # Virtual environments
 .venv
 .env
+
+*.mp4
+*.sqlite3
